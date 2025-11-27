@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean O talk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: transparent;
+            padding: 0px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        header.scrolled {
+            background-color: white;
+        }
+
+        header .logo {
+            height: 90px;
+            width: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 번개 아이콘 문의 버튼 */
+        .inquiry-btn {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            z-index: 1001;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            text-decoration: none;
+        }
+
+        .inquiry-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .inquiry-icon {
+            min-width: 70px;
+            height: 50px;
+            background-color: #FFEB3B;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .inquiry-btn:hover .inquiry-icon {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .inquiry-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            flex-shrink: 0;
+        }
+
+        .inquiry-text {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* 히어로 섹션 */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-container video.hidden {
+            display: none;
+        }
+
+        .video-container video.active {
+            display: block;
+        }
+
+        /* 히어로 콘텐츠 오버레이 */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 30px;
+        }
+
+        /* 텍스트 컨테이너 */
+        .text-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            max-width: 900px;
+            width: 100%;
+            padding: 0 30px;
+        }
+
+        .text-overlay.active {
+            opacity: 1;
+        }
+
+        .text-overlay .main-copy {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: -0.02em;
+        }
+
+        .text-overlay .sub-copy {
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1.6;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 추가 콘텐츠 섹션 (스크롤 테스트용) */
+        .content-section {
+            min-height: 100vh;
+            padding: 100px 30px;
+            background-color: #f5f5f5;
+        }
+
+        .content-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* 오른쪽 하단 고정 아이콘들 */
+        .fixed-icons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .fixed-icon-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+        }
+
+        .fixed-icon-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .fixed-icon-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .top-btn {
+            background-color: #FFEB3B;
+        }
+
+        .top-btn svg {
+            fill: white;
+        }
+
+        .kakao-btn {
+            background-color: #FEE500;
+        }
+
+        .kakao-btn svg {
+            fill: #3C1E1E;
+        }
+
+        .phone-btn {
+            background-color: #FFEB3B;
+        }
+
+        .phone-btn svg {
+            fill: white;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px 20px;
+            }
+
+            header .logo {
+                height: 80px;
+            }
+
+            .inquiry-btn {
+                top: 100px;
+                right: 20px;
+            }
+
+            .inquiry-icon {
+                min-width: 60px;
+                height: 45px;
+                padding: 0 12px;
+                gap: 6px;
+            }
+
+            .inquiry-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .inquiry-text {
+                font-size: 0.8rem;
+            }
+
+            .fixed-icons {
+                bottom: 20px;
+                right: 20px;
+                gap: 12px;
+            }
+
+            .fixed-icon-btn {
+                width: 45px;
+                height: 45px;
+            }
+
+            .fixed-icon-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .hero-content {
+                padding: 0 20px;
+            }
+
+            .text-overlay {
+                padding: 0 20px;
+            }
+
+            .text-overlay .main-copy {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+                letter-spacing: -0.01em;
+            }
+
+            .text-overlay .sub-copy {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0px 15px;
+            }
+
+            header .logo {
+                height: 70px;
+            }
+
+            .inquiry-btn {
+                top: 90px;
+                right: 15px;
+            }
+
+            .inquiry-icon {
+                min-width: 55px;
+                height: 40px;
+                padding: 0 10px;
+                gap: 5px;
+            }
+
+            .inquiry-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .inquiry-text {
+                font-size: 0.7rem;
+            }
+
+            .fixed-icons {
+                bottom: 15px;
+                right: 15px;
+                gap: 10px;
+            }
+
+            .fixed-icon-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .fixed-icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .hero-content {
+                padding: 0 15px;
+            }
+
+            .text-overlay {
+                padding: 0 15px;
+            }
+
+            .text-overlay .main-copy {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+                letter-spacing: -0.01em;
+            }
+
+            .text-overlay .sub-copy {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <img src="images/cleanotalklogo.png" alt="Clean O talk" class="logo">
+    </header>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero-section">
+        <!-- 문의 버튼 -->
+        <a href="#" class="inquiry-btn" aria-label="문의하기">
+            <div class="inquiry-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
+                </svg>
+                <span class="inquiry-text">문의</span>
+            </div>
+        </a>
+        <div class="video-container">
+            <video id="video1" class="active" muted autoplay>
+                <source src="video/v-1.mp4" type="video/mp4">
+            </video>
+            <video id="video2" class="hidden" muted>
+                <source src="video/v-2.mp4" type="video/mp4">
+            </video>
+            <video id="video3" class="hidden" muted>
+                <source src="video/v-3.mp4" type="video/mp4">
+            </video>
+            <video id="video4" class="hidden" muted>
+                <source id="video4-source" src="video/v-4.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="hero-content">
+            <!-- 영상 1 텍스트 -->
+            <div class="text-overlay active" id="text1">
+                <div class="main-copy">처음 그 설렘 그대로.<br>당신의 새 집을<br> 완벽하게 준비합니다.</div>
+                <div class="sub-copy">입주 전 가장 중요한 한 번의 청소,<br>전문가의 손길로 집이 '새집처럼' 태어납니다.</div>
+            </div>
+            <!-- 영상 2 텍스트 -->
+            <div class="text-overlay" id="text2">
+                <div class="main-copy">힘든 이사 날,<br>청소는 저희가 대신하겠습니다.</div>
+                <div class="sub-copy">집 안의 묵은 때부터 보이지 않는 틈새까지<br>새로운 출발에 어울리는 깨끗함을 채워드립니다.</div>
+            </div>
+            <!-- 영상 3 텍스트 -->
+            <div class="text-overlay" id="text3">
+                <div class="main-copy">시간이 지나도<br> 변함없는 아름다움,<br>차원이 다른 마감 퀄리티로<br> 완성합니다.</div>
+                <div class="sub-copy">곰팡이 걱정, 틈새 오염 걱정 없이<br>오래도록 깨끗함이 유지되는 시공을 제공합니다.</div>
+            </div>
+            <!-- 영상 4 텍스트 -->
+            <div class="text-overlay" id="text4">
+                <div class="main-copy">당신의 하루가 더 편안해지도록,<br>우리는 오늘도 한 땀 한 땀<br> 정성을 담습니다.</div>
+                <div class="sub-copy">수백 건의 시공 노하우로 쌓은 믿음.<br>당신의 공간을 가장 아름다운 상태로 돌려드립니다.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 추가 콘텐츠 섹션 -->
+    <section class="content-section">
+        <h2>콘텐츠 섹션</h2>
+        <p style="text-align: center; color: #666; line-height: 1.8;">
+            스크롤을 내려보세요. 헤더가 따라 내려옵니다.
+        </p>
+    </section>
+
+    <script>
+        // 모바일 화면 감지 및 비디오 소스 설정
+        function setVideoSource() {
+            const video4Source = document.getElementById('video4-source');
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                video4Source.src = 'video/v-4-m.mp4';
+            } else {
+                video4Source.src = 'video/v-4.mp4';
+            }
+            
+            // 비디오 소스가 변경되었으므로 로드
+            const video4 = document.getElementById('video4');
+            video4.load();
+        }
+
+        // 초기 설정
+        setVideoSource();
+
+        // 화면 크기 변경 시 재설정
+        window.addEventListener('resize', setVideoSource);
+
+        // 비디오 순차 재생 로직
+        const videos = [
+            document.getElementById('video1'),
+            document.getElementById('video2'),
+            document.getElementById('video3'),
+            document.getElementById('video4')
+        ];
+
+        // 텍스트 오버레이 요소들
+        const textOverlays = [
+            document.getElementById('text1'),
+            document.getElementById('text2'),
+            document.getElementById('text3'),
+            document.getElementById('text4')
+        ];
+
+        let currentVideoIndex = 0;
+
+        function playNextVideo() {
+            // 현재 비디오 숨기기
+            videos[currentVideoIndex].classList.remove('active');
+            videos[currentVideoIndex].classList.add('hidden');
+            videos[currentVideoIndex].pause();
+            videos[currentVideoIndex].currentTime = 0;
+
+            // 현재 텍스트 숨기기
+            textOverlays[currentVideoIndex].classList.remove('active');
+
+            // 다음 비디오로 이동
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+
+            // 다음 비디오 표시 및 재생
+            videos[currentVideoIndex].classList.remove('hidden');
+            videos[currentVideoIndex].classList.add('active');
+            videos[currentVideoIndex].play();
+
+            // 다음 텍스트 표시
+            textOverlays[currentVideoIndex].classList.add('active');
+        }
+
+        // 각 비디오에 ended 이벤트 리스너 추가
+        videos.forEach((video, index) => {
+            video.addEventListener('ended', playNextVideo);
+        });
+
+        // 첫 번째 비디오 재생 시작
+        videos[0].play();
+
+        // 히어로 섹션 내에서만 문의 버튼 표시
+        const inquiryBtn = document.querySelector('.inquiry-btn');
+        const heroSection = document.querySelector('.hero-section');
+
+        function checkHeroSection() {
+            const heroRect = heroSection.getBoundingClientRect();
+            const isVisible = heroRect.top < window.innerHeight && heroRect.bottom > 0;
+            
+            if (isVisible) {
+                inquiryBtn.classList.remove('hidden');
+            } else {
+                inquiryBtn.classList.add('hidden');
+            }
+        }
+
+        // 헤더 스크롤 시 배경색 변경
+        const header = document.querySelector('header');
+        
+        function handleScroll() {
+            checkHeroSection();
+            
+            // 스크롤 위치에 따라 헤더 배경색 변경
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // 스크롤 이벤트 리스너
+        window.addEventListener('scroll', handleScroll);
+        
+        // 초기 체크
+        handleScroll();
+
+        // Top 버튼 클릭 시 맨 위로 스크롤
+        document.querySelector('.top-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+
+    <!-- 오른쪽 하단 고정 아이콘들 -->
+    <div class="fixed-icons">
+        <a href="#" class="fixed-icon-btn top-btn" aria-label="맨 위로">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4l-8 8h5v8h6v-8h5l-8-8z"/>
+            </svg>
+        </a>
+        <a href="#" class="fixed-icon-btn kakao-btn" aria-label="카카오톡 문의">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 0 1-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
+            </svg>
+        </a>
+        <a href="tel:" class="fixed-icon-btn phone-btn" aria-label="전화 문의">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+        </a>
+    </div>
+</body>
+</html>
+
