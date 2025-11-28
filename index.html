@@ -308,6 +308,29 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
+            -webkit-playsinline: true;
+        }
+
+        /* 모바일에서 비디오 플레이어 컨트롤 완전히 숨기기 */
+        .video-container video::-webkit-media-controls {
+            display: none !important;
+        }
+
+        .video-container video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
+
+        .video-container video::-webkit-media-controls-panel {
+            display: none !important;
+        }
+
+        .video-container video::-webkit-media-controls-play-button {
+            display: none !important;
+        }
+
+        .video-container video::-webkit-media-controls-start-playback-button {
+            display: none !important;
         }
 
         .video-container video.hidden {
@@ -1273,16 +1296,16 @@
             </div>
         </a>
         <div class="video-container">
-            <video id="video1" class="active" muted autoplay>
+            <video id="video1" class="active" muted autoplay playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="auto" loop>
                 <source src="video/v-1.mp4" type="video/mp4">
             </video>
-            <video id="video2" class="hidden" muted>
+            <video id="video2" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata" loop>
                 <source src="video/v-2.mp4" type="video/mp4">
             </video>
-            <video id="video3" class="hidden" muted>
+            <video id="video3" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata" loop>
                 <source src="video/v-3.mp4" type="video/mp4">
             </video>
-            <video id="video4" class="hidden" muted>
+            <video id="video4" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata" loop>
                 <source id="video4-source" src="video/v-4.mp4" type="video/mp4">
             </video>
         </div>
@@ -1546,10 +1569,17 @@
             if (videos[currentVideoIndex]) {
                 videos[currentVideoIndex].classList.remove('hidden');
                 videos[currentVideoIndex].classList.add('active');
-                videos[currentVideoIndex].play().catch(function(error) {
-                    // 비디오 재생 실패 시 무시
-                    console.log('비디오 재생 실패:', error);
-                });
+                // 다음 비디오가 필요할 때만 로드
+                if (videos[currentVideoIndex].readyState === 0) {
+                    videos[currentVideoIndex].load();
+                }
+                const playPromise = videos[currentVideoIndex].play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(function(error) {
+                        // 비디오 재생 실패 시 무시
+                        console.log('비디오 재생 실패:', error);
+                    });
+                }
             }
 
             // 다음 텍스트 표시 (4번째 비디오는 텍스트 표시 안함)
@@ -1558,19 +1588,32 @@
             }
         }
 
-        // 각 비디오에 ended 이벤트 리스너 추가
+        // 각 비디오에 ended 이벤트 리스너 추가 및 모바일 설정
         videos.forEach((video, index) => {
             if (video) {
                 video.addEventListener('ended', playNextVideo);
+                // 모바일에서 인라인 재생 및 컨트롤 완전히 숨기기
+                video.setAttribute('playsinline', '');
+                video.setAttribute('webkit-playsinline', '');
+                video.setAttribute('x5-playsinline', '');
+                video.setAttribute('x5-video-player-type', 'h5');
+                video.setAttribute('x5-video-player-fullscreen', 'false');
+                video.controls = false;
+                video.removeAttribute('controls');
+                // 모바일에서 비디오가 플레이어처럼 보이지 않도록
+                video.style.pointerEvents = 'none';
             }
         });
 
         // 첫 번째 비디오 재생 시작 (에러 처리)
         if (videos[0]) {
-            videos[0].play().catch(function(error) {
-                // 비디오 재생 실패 시 무시 (자동재생 정책 등으로 인한 에러)
-                console.log('비디오 자동재생이 차단되었습니다:', error);
-            });
+            const playPromise = videos[0].play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    // 비디오 재생 실패 시 무시 (자동재생 정책 등으로 인한 에러)
+                    console.log('비디오 자동재생이 차단되었습니다:', error);
+                });
+            }
         }
 
         // 헤더 스크롤 시 배경색 변경
