@@ -27,10 +27,20 @@
             padding: 0px 30px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s ease;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 30px;
         }
 
         header.scrolled {
             background-color: white;
+        }
+
+        .logo-link {
+            display: inline-block;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         header .logo {
@@ -38,6 +48,190 @@
             width: auto;
             position: relative;
             z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-link:hover .logo {
+            opacity: 0.8;
+        }
+
+        /* 네비게이션 메뉴 */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        header:not(.scrolled) .nav-menu li a {
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-menu li a:hover {
+            color: #FFC107;
+        }
+
+        .nav-menu li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu li a:hover::after {
+            width: 100%;
+        }
+
+        /* 모바일 메뉴 버튼 */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1002;
+            justify-self: end;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        header:not(.scrolled) .mobile-menu-btn span {
+            background-color: white;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* 모바일 메뉴 배경 오버레이 */
+        .mobile-menu-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-menu-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 모바일 메뉴 오버레이 */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFEB3B 100%);
+            z-index: 1001;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+
+        .mobile-menu-overlay.active {
+            right: 0;
+        }
+
+        .mobile-menu-content {
+            padding: 100px 30px 30px;
+        }
+
+        .mobile-menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-menu-list li {
+            margin-bottom: 20px;
+        }
+
+        .mobile-menu-list li a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: block;
+            padding: 15px 0;
+            border-bottom: 2px solid rgba(26, 26, 26, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-list li a:hover {
+            color: #333;
+            padding-left: 10px;
+            border-bottom-color: rgba(26, 26, 26, 0.3);
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #1a1a1a;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .mobile-menu-close:hover {
+            background-color: rgba(26, 26, 26, 0.1);
         }
 
         /* 번개 아이콘 문의 버튼 */
@@ -171,17 +365,651 @@
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
         }
 
-        /* 추가 콘텐츠 섹션 (스크롤 테스트용) */
-        .content-section {
-            min-height: 100vh;
-            padding: 100px 30px;
-            background-color: #f5f5f5;
+        /* 섹션 공통 스타일 */
+        .section {
+            padding: 80px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .content-section h2 {
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
             color: #333;
+            letter-spacing: -0.02em;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            border-radius: 2px;
+        }
+
+        /* 서비스 소개 섹션 */
+        .service-intro {
+            background-color: #fff;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFEB3B 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: #1a1a1a;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .service-badge {
+            background-color: rgba(26, 26, 26, 0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .service-location {
+            font-size: 1rem;
+            color: #1a1a1a;
+            opacity: 0.8;
+        }
+
+        .service-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .service-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .feature-tag {
+            background-color: rgba(26, 26, 26, 0.15);
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        /* 제공 서비스 섹션 */
+        .services-list {
+            background-color: #f8f9fa;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .service-item {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 193, 7, 0.2);
+            border: 2px solid #FFEB3B;
+        }
+
+        .service-item-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .service-item-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            border-radius: 2px;
+        }
+
+        .service-item-desc {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* 프로세스 섹션 */
+        .process-section {
+            background-color: #fff;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFEB3B 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* 이미지 섹션 */
+        .image-section {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-section img.mobile-only {
+            display: none;
+        }
+
+        .image-section img.desktop-only {
+            display: block;
+        }
+
+        /* 문의 섹션 */
+        .inquiry-section {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFEB3B 100%);
+            padding: 80px 30px;
+            text-align: center;
+        }
+
+        .inquiry-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .inquiry-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .inquiry-subtitle {
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .inquiry-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .inquiry-btn-large {
+            padding: 18px 40px;
+            background-color: #1a1a1a;
+            color: #FFEB3B;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .inquiry-btn-large:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .inquiry-btn-outline {
+            padding: 18px 40px;
+            background-color: transparent;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .inquiry-btn-outline:hover {
+            background-color: #1a1a1a;
+            color: #FFEB3B;
+            transform: translateY(-2px);
+        }
+
+        /* 문의 폼 섹션 */
+        .inquiry-form-section {
+            background-color: #fff;
+            padding: 80px 30px;
+        }
+
+        .inquiry-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .inquiry-form-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .inquiry-form-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .inquiry-form {
+            background-color: #f8f9fa;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #FFC107;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFEB3B 100%);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .form-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        /* 작업현장 슬라이더 섹션 - 새로 작성 */
+        .job-slider-section {
+            background-color: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .job-slider-container {
+            max-width: 100%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .job-slider-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #333;
+            letter-spacing: -0.02em;
+            position: relative;
+            padding: 0 30px;
+        }
+
+        .job-slider-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            border-radius: 2px;
+        }
+
+        .job-slider-wrapper {
+            position: relative;
+            overflow: hidden;
+            margin: 40px 0;
+            width: 100%;
+        }
+
+        .job-slider-track {
+            display: flex;
+            transition: transform 0.6s ease;
+            gap: 0;
+        }
+
+        .job-card {
+            flex: 0 0 100%;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+        }
+
+        .job-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        /* PC에서 6개씩 보이기 */
+        @media (min-width: 769px) {
+            .job-slider-section {
+                padding: 80px 0;
+            }
+            .job-slider-wrapper {
+                width: 100%;
+                margin: 40px 0;
+            }
+            .job-slider-track {
+                gap: 10px;
+                flex-wrap: nowrap;
+            }
+            .job-card {
+                flex: 0 0 calc((100% - 50px) / 6);
+                min-width: 0;
+            }
+        }
+
+        /* 슬라이더 인디케이터 */
+        .job-slider-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .job-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .job-indicator.active {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        .job-slider-text {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 40px;
+            font-weight: 500;
+            padding: 0 30px;
+        }
+
+        .job-slider-text::before {
+            content: '📸 ';
+        }
+
+        /* 푸터 */
+        footer {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 60px 30px 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #FFEB3B;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a:hover {
+            color: #FFEB3B;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 30px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+
+            .service-card {
+                padding: 30px 20px;
+            }
+
+            .service-description {
+                font-size: 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .process-steps {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .image-section img.mobile-only {
+                display: block;
+            }
+
+            .image-section img.desktop-only {
+                display: none;
+            }
+
+            .inquiry-section {
+                padding: 60px 20px;
+            }
+
+            .inquiry-title {
+                font-size: 2rem;
+            }
+
+            .inquiry-subtitle {
+                font-size: 1rem;
+            }
+
+            .inquiry-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .inquiry-btn-large,
+            .inquiry-btn-outline {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .job-slider-section {
+                padding: 60px 20px;
+            }
+
+            .job-slider-title {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+
+            .job-slider-text {
+                font-size: 1rem;
+                margin-top: 30px;
+            }
+
+            .inquiry-form-section {
+                padding: 60px 20px;
+            }
+
+            .inquiry-form {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .inquiry-form-title {
+                font-size: 2rem;
+            }
         }
 
         /* 오른쪽 하단 고정 아이콘들 */
@@ -246,10 +1074,22 @@
         @media (max-width: 768px) {
             header {
                 padding: 10px 20px;
+                grid-template-columns: auto 1fr;
+                justify-items: start;
             }
 
             header .logo {
                 height: 80px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                justify-self: end;
+                grid-column: 2;
             }
 
             .inquiry-btn {
@@ -377,13 +1217,54 @@
 <body>
     <!-- 헤더 -->
     <header>
-        <img src="images/cleanotalklogo.png" alt="Clean O talk" class="logo">
+        <a href="#hero" class="logo-link">
+            <img src="images/cleanotalklogo.png" alt="Clean O talk" class="logo">
+        </a>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#intro">소개</a></li>
+                <li><a href="#allinone">올인원 입주청소</a></li>
+                <li><a href="#why">Why 클린오톡</a></li>
+                <li><a href="#service">서비스소개</a></li>
+                <li><a href="#comparison">전후비교</a></li>
+                <li><a href="#reason">선택의이유</a></li>
+                <li><a href="#process">진행과정</a></li>
+                <li><a href="#review">후기</a></li>
+                <li><a href="#inquiry">문의</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-btn" aria-label="메뉴">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </header>
 
+    <!-- 모바일 메뉴 배경 오버레이 -->
+    <div class="mobile-menu-backdrop"></div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile-menu-overlay">
+        <button class="mobile-menu-close" aria-label="메뉴 닫기">×</button>
+        <div class="mobile-menu-content">
+            <ul class="mobile-menu-list">
+                <li><a href="#intro">소개</a></li>
+                <li><a href="#allinone">올인원 입주청소</a></li>
+                <li><a href="#why">Why 클린오톡</a></li>
+                <li><a href="#service">서비스소개</a></li>
+                <li><a href="#comparison">전후비교</a></li>
+                <li><a href="#reason">선택의이유</a></li>
+                <li><a href="#process">진행과정</a></li>
+                <li><a href="#review">후기</a></li>
+                <li><a href="#inquiry">문의</a></li>
+            </ul>
+        </div>
+    </div>
+
     <!-- 히어로 섹션 -->
-    <section class="hero-section">
+    <section id="hero" class="hero-section">
         <!-- 문의 버튼 -->
-        <a href="#" class="inquiry-btn" aria-label="문의하기">
+        <a href="#inquiry-form" class="inquiry-btn" aria-label="문의하기">
             <div class="inquiry-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
@@ -429,15 +1310,185 @@
         </div>
     </section>
 
-    <!-- 추가 콘텐츠 섹션 -->
-    <section class="content-section">
-        <h2>콘텐츠 섹션</h2>
-        <p style="text-align: center; color: #666; line-height: 1.8;">
-            스크롤을 내려보세요. 헤더가 따라 내려옵니다.
-        </p>
+    <!-- 이미지 섹션들 -->
+    <!-- 1. 소개 -->
+    <section id="intro" class="image-section">
+        <img src="images/section/1.png" alt="소개" class="desktop-only">
+        <img src="images/section/1-m.png" alt="소개" class="mobile-only">
     </section>
 
+    <!-- 2. 올인원 입주청소 -->
+    <section id="allinone" class="image-section">
+        <img src="images/section/2.png" alt="올인원 입주청소" class="desktop-only">
+        <img src="images/section/2-m.png" alt="올인원 입주청소" class="mobile-only">
+    </section>
+
+    <!-- 3. Why 클린오톡 -->
+    <section id="why" class="image-section">
+        <img src="images/section/3.png" alt="Why 클린오톡" class="desktop-only">
+        <img src="images/section/3-m.png" alt="Why 클린오톡" class="mobile-only">
+    </section>
+
+    <!-- 4. 서비스소개 -->
+    <section id="service" class="image-section">
+        <img src="images/section/4.png" alt="서비스소개" class="desktop-only">
+        <img src="images/section/4-m.png" alt="서비스소개" class="mobile-only">
+    </section>
+
+    <!-- 5. 전후비교 -->
+    <section id="comparison" class="image-section">
+        <img src="images/section/5.png" alt="전후비교" class="desktop-only">
+        <img src="images/section/5-m.png" alt="전후비교" class="mobile-only">
+    </section>
+
+    <!-- 작업현장 슬라이더 섹션 -->
+    <section id="job-site" class="job-slider-section">
+        <div class="job-slider-container">
+            <h2 class="job-slider-title">실시간 작업현장</h2>
+            <div class="job-slider-wrapper">
+                <div class="job-slider-track" id="jobSliderTrack">
+                    <div class="job-card"><img src="images/job/j-12.jpg" alt="작업현장 12"></div>
+                    <div class="job-card"><img src="images/job/j-11.jpg" alt="작업현장 11"></div>
+                    <div class="job-card"><img src="images/job/j-10.jpg" alt="작업현장 10"></div>
+                    <div class="job-card"><img src="images/job/j-9.jpg" alt="작업현장 9"></div>
+                    <div class="job-card"><img src="images/job/j-8.jpg" alt="작업현장 8"></div>
+                    <div class="job-card"><img src="images/job/j-7.jpg" alt="작업현장 7"></div>
+                    <div class="job-card"><img src="images/job/j-6.jpg" alt="작업현장 6"></div>
+                    <div class="job-card"><img src="images/job/j-5.jpg" alt="작업현장 5"></div>
+                    <div class="job-card"><img src="images/job/j-4.jpg" alt="작업현장 4"></div>
+                    <div class="job-card"><img src="images/job/j-3.jpg" alt="작업현장 3"></div>
+                    <div class="job-card"><img src="images/job/j-2.jpg" alt="작업현장 2"></div>
+                    <div class="job-card"><img src="images/job/j-1.jpg" alt="작업현장 1"></div>
+                </div>
+            </div>
+            <div class="job-slider-indicators" id="jobIndicators"></div>
+            <p class="job-slider-text">저희는 모든 작업을 기록하고 남겨드립니다.</p>
+        </div>
+    </section>
+
+    <!-- 6. 선택의이유 -->
+    <section id="reason" class="image-section">
+        <img src="images/section/6.png" alt="선택의이유" class="desktop-only">
+        <img src="images/section/6-m.png" alt="선택의이유" class="mobile-only">
+    </section>
+
+    <!-- 7. 진행과정 -->
+    <section id="process" class="image-section">
+        <img src="images/section/7.png" alt="진행과정" class="desktop-only">
+        <img src="images/section/7-m.png" alt="진행과정" class="mobile-only">
+    </section>
+
+    <!-- 8. 후기 -->
+    <section id="review" class="image-section">
+        <img src="images/section/8.png" alt="후기" class="desktop-only">
+        <img src="images/section/8-m.png" alt="후기" class="mobile-only">
+    </section>
+
+    <!-- 문의 섹션 -->
+    <section id="inquiry" class="inquiry-section">
+        <div class="inquiry-content">
+            <h2 class="inquiry-title">지금 바로 문의하세요</h2>
+            <p class="inquiry-subtitle">
+                전문가가 직접 방문하여 상담해드립니다.<br>
+                빠른 응답과 정확한 견적으로 최고의 서비스를 제공합니다.
+            </p>
+            <div class="inquiry-buttons">
+                <a href="tel:01051444998" class="inquiry-btn-large">전화 문의</a>
+                <a href="https://open.kakao.com/o/sUjKAq3h" target="_blank" rel="noopener noreferrer" class="inquiry-btn-outline">카카오톡 문의</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 문의 폼 섹션 -->
+    <section id="inquiry-form" class="inquiry-form-section">
+        <div class="inquiry-form-container">
+            <h2 class="inquiry-form-title">온라인 문의</h2>
+            <p class="inquiry-form-subtitle">
+                아래 양식을 작성해주시면 빠르게 연락드리겠습니다.
+            </p>
+            <form class="inquiry-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">이름 *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">연락처 *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="service">서비스 유형 *</label>
+                        <select id="service" name="service" required>
+                            <option value="">선택해주세요</option>
+                            <option value="입주청소">입주청소</option>
+                            <option value="이사청소">이사청소</option>
+                            <option value="거주청소">거주청소</option>
+                            <option value="곰팡이제거">곰팡이 제거</option>
+                            <option value="나노코팅">나노코팅 시공</option>
+                            <option value="기타">기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">면적 (평수)</label>
+                        <input type="text" id="area" name="area" placeholder="예: 30평">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address">주소</label>
+                    <input type="text" id="address" name="address" placeholder="서비스 받을 주소를 입력해주세요">
+                </div>
+                <div class="form-group">
+                    <label for="date">희망 일시</label>
+                    <input type="text" id="date" name="date" placeholder="예: 2024년 1월 15일 오후 2시">
+                </div>
+                <div class="form-group">
+                    <label for="message">문의 내용 *</label>
+                    <textarea id="message" name="message" required placeholder="상세한 문의 내용을 입력해주세요"></textarea>
+                </div>
+                <button type="submit" class="form-submit-btn">문의하기</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="footer-section">
+                    <img src="images/cleanotalklogo.png" alt="Clean O talk" class="footer-logo">
+                    <p>전문 청소 서비스로 깨끗한 공간을 만들어드립니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>서비스</h3>
+                    <p><a href="#">이사/입주 청소</a></p>
+                    <p><a href="#">거주 청소</a></p>
+                    <p><a href="#">곰팡이 제거</a></p>
+                    <p><a href="#">나노코팅 시공</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>전화: <a href="tel:01051444998">010-5144-4998</a></p>
+                    <p>카카오톡: <a href="https://open.kakao.com/o/sUjKAq3h" target="_blank" rel="noopener noreferrer">오픈채팅으로 문의하기</a></p>
+                    <p>서비스 지역: 경기 안양시</p>
+                    <p>이동 가능 거리: 75km</p>
+                </div>
+                <div class="footer-section">
+                    <h3>정보</h3>
+                    <p>총 경력: 6년</p>
+                    <p>전문 인력: 10명</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 클린오톡. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
+        // DOM이 완전히 로드된 후 실행
+        document.addEventListener('DOMContentLoaded', function() {
         // 모바일 화면 감지 및 비디오 소스 설정
         function setVideoSource() {
             const video4Source = document.getElementById('video4-source');
@@ -492,43 +1543,40 @@
             currentVideoIndex = (currentVideoIndex + 1) % videos.length;
 
             // 다음 비디오 표시 및 재생
-            videos[currentVideoIndex].classList.remove('hidden');
-            videos[currentVideoIndex].classList.add('active');
-            videos[currentVideoIndex].play();
+            if (videos[currentVideoIndex]) {
+                videos[currentVideoIndex].classList.remove('hidden');
+                videos[currentVideoIndex].classList.add('active');
+                videos[currentVideoIndex].play().catch(function(error) {
+                    // 비디오 재생 실패 시 무시
+                    console.log('비디오 재생 실패:', error);
+                });
+            }
 
-            // 다음 텍스트 표시
-            textOverlays[currentVideoIndex].classList.add('active');
+            // 다음 텍스트 표시 (4번째 비디오는 텍스트 표시 안함)
+            if (currentVideoIndex !== 3) {
+                textOverlays[currentVideoIndex].classList.add('active');
+            }
         }
 
         // 각 비디오에 ended 이벤트 리스너 추가
         videos.forEach((video, index) => {
-            video.addEventListener('ended', playNextVideo);
+            if (video) {
+                video.addEventListener('ended', playNextVideo);
+            }
         });
 
-        // 첫 번째 비디오 재생 시작
-        videos[0].play();
-
-        // 히어로 섹션 내에서만 문의 버튼 표시
-        const inquiryBtn = document.querySelector('.inquiry-btn');
-        const heroSection = document.querySelector('.hero-section');
-
-        function checkHeroSection() {
-            const heroRect = heroSection.getBoundingClientRect();
-            const isVisible = heroRect.top < window.innerHeight && heroRect.bottom > 0;
-            
-            if (isVisible) {
-                inquiryBtn.classList.remove('hidden');
-            } else {
-                inquiryBtn.classList.add('hidden');
-            }
+        // 첫 번째 비디오 재생 시작 (에러 처리)
+        if (videos[0]) {
+            videos[0].play().catch(function(error) {
+                // 비디오 재생 실패 시 무시 (자동재생 정책 등으로 인한 에러)
+                console.log('비디오 자동재생이 차단되었습니다:', error);
+            });
         }
 
         // 헤더 스크롤 시 배경색 변경
         const header = document.querySelector('header');
         
         function handleScroll() {
-            checkHeroSection();
-            
             // 스크롤 위치에 따라 헤더 배경색 변경
             if (window.scrollY > 50) {
                 header.classList.add('scrolled');
@@ -544,10 +1592,298 @@
         handleScroll();
 
         // Top 버튼 클릭 시 맨 위로 스크롤
-        document.querySelector('.top-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        const topBtn = document.querySelector('.top-btn');
+        if (topBtn) {
+            topBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // 모바일 메뉴 토글
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+        const mobileMenuBackdrop = document.querySelector('.mobile-menu-backdrop');
+        const mobileMenuClose = document.querySelector('.mobile-menu-close');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-list a');
+
+        function openMobileMenu() {
+            if (mobileMenuOverlay && mobileMenuBackdrop && mobileMenuBtn) {
+                mobileMenuOverlay.classList.add('active');
+                mobileMenuBackdrop.classList.add('active');
+                mobileMenuBtn.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeMobileMenu() {
+            if (mobileMenuOverlay && mobileMenuBackdrop && mobileMenuBtn) {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBackdrop.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (mobileMenuBtn) {
+            // 클릭 이벤트
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (mobileMenuOverlay.classList.contains('active')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+            // 터치 이벤트 (모바일용)
+            mobileMenuBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            mobileMenuBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (mobileMenuOverlay.classList.contains('active')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+        }
+
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeMobileMenu();
+            });
+        }
+
+        // 모바일 메뉴 링크 클릭 시 메뉴 닫기
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                closeMobileMenu();
+                // 부드러운 스크롤
+                const targetId = this.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const headerHeight = 90;
+                        const targetPosition = targetSection.offsetTop - headerHeight;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
         });
+
+        // 데스크톱 네비게이션 링크 부드러운 스크롤
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const headerHeight = 90;
+                        const targetPosition = targetSection.offsetTop - headerHeight;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // 문의 아이콘 부드러운 스크롤
+        const inquiryIconBtn = document.querySelector('.inquiry-btn');
+        if (inquiryIconBtn) {
+            inquiryIconBtn.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const headerHeight = 90;
+                        const targetPosition = targetSection.offsetTop - headerHeight;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        }
+
+        // 로고 클릭 시 히어로 섹션으로 이동
+        const logoLink = document.querySelector('.logo-link');
+        if (logoLink) {
+            logoLink.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        }
+
+        // 모바일 메뉴 배경 오버레이 클릭 시 닫기
+        if (mobileMenuBackdrop) {
+            mobileMenuBackdrop.addEventListener('click', function(e) {
+                if (e.target === mobileMenuBackdrop) {
+                    closeMobileMenu();
+                }
+            });
+        }
+
+        // 문의 폼 제출
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // 폼 데이터 수집
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                // 여기서 실제로는 서버로 데이터를 전송해야 합니다
+                // 예시: alert로 표시
+                alert('문의가 접수되었습니다.\n빠른 시일 내에 연락드리겠습니다.');
+                
+                // 폼 초기화
+                this.reset();
+            });
+        }
+
+        // 작업현장 슬라이더 - 완전히 새로 작성
+        (function() {
+            const track = document.getElementById('jobSliderTrack');
+            const indicators = document.getElementById('jobIndicators');
+            const cards = document.querySelectorAll('.job-card');
+            if (!track || cards.length === 0) return;
+
+            let currentIndex = 0;
+            let autoSlide = null;
+            const isMobile = () => window.innerWidth <= 768;
+            const getCardsPerView = () => isMobile() ? 1 : 6;
+            const getTotalSlides = () => Math.ceil(cards.length / getCardsPerView());
+
+            // 인디케이터 생성
+            function createIndicators() {
+                if (!indicators) return;
+                indicators.innerHTML = '';
+                const total = getTotalSlides();
+                for (let i = 0; i < total; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'job-indicator' + (i === 0 ? ' active' : '');
+                    dot.onclick = () => goToSlide(i);
+                    indicators.appendChild(dot);
+                }
+            }
+
+            // 슬라이드 이동
+            function goToSlide(index) {
+                currentIndex = index;
+                const total = getTotalSlides();
+                if (currentIndex >= total) currentIndex = 0;
+                if (currentIndex < 0) currentIndex = total - 1;
+
+                if (isMobile()) {
+                    // 모바일: 100%씩 이동
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                } else {
+                    // PC: wrapper 너비 기준으로 정확히 이동
+                    const wrapper = track.parentElement;
+                    if (wrapper) {
+                        const wrapperWidth = wrapper.offsetWidth;
+                        const moveDistance = currentIndex * wrapperWidth;
+                        track.style.transform = `translateX(-${moveDistance}px)`;
+                    }
+                }
+
+                // 인디케이터 업데이트
+                if (indicators) {
+                    const dots = indicators.querySelectorAll('.job-indicator');
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentIndex);
+                    });
+                }
+            }
+
+            // 다음 슬라이드
+            function nextSlide() {
+                const total = getTotalSlides();
+                currentIndex = (currentIndex + 1) % total;
+                goToSlide(currentIndex);
+            }
+
+            // 자동 슬라이드 시작
+            function startAutoSlide() {
+                if (autoSlide) clearInterval(autoSlide);
+                autoSlide = setInterval(nextSlide, 2500);
+            }
+
+            // 초기화
+            function init() {
+                createIndicators();
+                // 이미지와 레이아웃이 완전히 로드된 후 슬라이드 이동
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        goToSlide(0);
+                        startAutoSlide();
+                    }, 200);
+                });
+            }
+
+            // 리사이즈 처리
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    currentIndex = 0;
+                    createIndicators();
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            goToSlide(0);
+                            startAutoSlide();
+                        }, 100);
+                    });
+                }, 300);
+            });
+
+            // 호버 일시정지
+            const section = document.querySelector('.job-slider-section');
+            if (section) {
+                section.addEventListener('mouseenter', () => {
+                    if (autoSlide) clearInterval(autoSlide);
+                });
+                section.addEventListener('mouseleave', startAutoSlide);
+            }
+
+            // 페이지 로드 후 초기화
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(init, 500);
+                });
+            } else {
+                setTimeout(init, 500);
+            }
+        })();
+        }); // DOMContentLoaded 종료
     </script>
 
     <!-- 오른쪽 하단 고정 아이콘들 -->
@@ -557,12 +1893,12 @@
                 <path d="M12 4l-8 8h5v8h6v-8h5l-8-8z"/>
             </svg>
         </a>
-        <a href="#" class="fixed-icon-btn kakao-btn" aria-label="카카오톡 문의">
+        <a href="https://open.kakao.com/o/sUjKAq3h" target="_blank" rel="noopener noreferrer" class="fixed-icon-btn kakao-btn" aria-label="카카오톡 문의">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 0 1-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
             </svg>
         </a>
-        <a href="tel:" class="fixed-icon-btn phone-btn" aria-label="전화 문의">
+        <a href="tel:01051444998" class="fixed-icon-btn phone-btn" aria-label="전화 문의">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
             </svg>
