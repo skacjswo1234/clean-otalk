@@ -1296,22 +1296,22 @@
             </div>
         </a>
         <div class="video-container">
-            <video id="video1" class="active" muted autoplay playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="auto" loop>
+            <video id="video1" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata">
                 <source src="video/v-1.mp4" type="video/mp4">
             </video>
-            <video id="video2" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata" loop>
+            <video id="video2" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata">
                 <source src="video/v-2.mp4" type="video/mp4">
             </video>
-            <video id="video3" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata" loop>
+            <video id="video3" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata">
                 <source src="video/v-3.mp4" type="video/mp4">
             </video>
-            <video id="video4" class="hidden" muted playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="metadata" loop>
+            <video id="video4" class="active" muted autoplay playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="false" preload="auto">
                 <source id="video4-source" src="video/v-4.mp4" type="video/mp4">
             </video>
         </div>
         <div class="hero-content">
             <!-- 영상 1 텍스트 -->
-            <div class="text-overlay active" id="text1">
+            <div class="text-overlay" id="text1">
                 <div class="main-copy">처음 그 설렘 그대로.<br>당신의 새 집을<br> 완벽하게 준비합니다.</div>
                 <div class="sub-copy">입주 전 가장 중요한 한 번의 청소,<br>전문가의 손길로 집이 '새집처럼' 태어납니다.</div>
             </div>
@@ -1534,20 +1534,20 @@
         // 화면 크기 변경 시 재설정
         window.addEventListener('resize', setVideoSource);
 
-        // 비디오 순차 재생 로직
+        // 비디오 순차 재생 로직 (v4 → v3 → v2 → v1 순서)
         const videos = [
-            document.getElementById('video1'),
-            document.getElementById('video2'),
+            document.getElementById('video4'),
             document.getElementById('video3'),
-            document.getElementById('video4')
+            document.getElementById('video2'),
+            document.getElementById('video1')
         ];
 
-        // 텍스트 오버레이 요소들
+        // 텍스트 오버레이 요소들 (v4 → v3 → v2 → v1 순서에 맞춤)
         const textOverlays = [
-            document.getElementById('text1'),
-            document.getElementById('text2'),
+            document.getElementById('text4'),
             document.getElementById('text3'),
-            document.getElementById('text4')
+            document.getElementById('text2'),
+            document.getElementById('text1')
         ];
 
         let currentVideoIndex = 0;
@@ -1582,16 +1582,24 @@
                 }
             }
 
-            // 다음 텍스트 표시 (4번째 비디오는 텍스트 표시 안함)
-            if (currentVideoIndex !== 3) {
-                textOverlays[currentVideoIndex].classList.add('active');
+            // 다음 텍스트 표시 (첫 번째 비디오(v4)는 텍스트 표시 안함)
+            if (currentVideoIndex !== 0) {
+                if (textOverlays[currentVideoIndex]) {
+                    textOverlays[currentVideoIndex].classList.add('active');
+                }
             }
         }
 
         // 각 비디오에 ended 이벤트 리스너 추가 및 모바일 설정
         videos.forEach((video, index) => {
             if (video) {
+                // loop 속성 제거 (ended 이벤트가 발생하도록)
+                video.removeAttribute('loop');
+                video.loop = false;
+                
+                // ended 이벤트 리스너 추가
                 video.addEventListener('ended', playNextVideo);
+                
                 // 모바일에서 인라인 재생 및 컨트롤 완전히 숨기기
                 video.setAttribute('playsinline', '');
                 video.setAttribute('webkit-playsinline', '');
