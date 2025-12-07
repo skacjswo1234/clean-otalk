@@ -1,0 +1,11 @@
+name = "clean-otalk"
+compatibility_date = "2024-01-01"
+
+# Pages Functions를 사용하므로 main 필드는 필요 없습니다
+# Pages는 functions 디렉토리를 자동으로 인식합니다
+
+[[d1_databases]]
+binding = "clean-otalk-db"
+database_name = "clean-otalk-db"
+database_id = "d2fd6fc4-9416-4aef-b11e-ae05d7bb7e40"
+

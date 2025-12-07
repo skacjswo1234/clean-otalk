@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 화면 - Clean O talk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .admin-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 왼쪽 사이드바 */
+        .sidebar {
+            width: 280px;
+            background-color: #1a1a1a;
+            padding: 30px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-section {
+            padding: 0 30px 30px;
+            border-bottom: 2px solid rgba(255, 235, 59, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo-section img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-menu li {
+            margin-bottom: 5px;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 15px 30px;
+            color: #FFEB3B;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(255, 235, 59, 0.1);
+            border-left-color: #FFEB3B;
+            padding-left: 35px;
+        }
+
+        .nav-menu a.active {
+            background-color: rgba(255, 235, 59, 0.15);
+            border-left-color: #FFEB3B;
+        }
+
+        /* 오른쪽 메인 콘텐츠 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: white;
+            padding: 25px 40px;
+            border-bottom: 2px solid #FFEB3B;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* 문의 리스트 테이블 */
+        .inquiry-table-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .refresh-btn {
+            background-color: #1a1a1a;
+            color: #FFEB3B;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+
+        .inquiry-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .inquiry-table thead {
+            background-color: #f8f9fa;
+        }
+
+        .inquiry-table th {
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #FFEB3B;
+        }
+
+        .inquiry-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .inquiry-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .inquiry-table tbody tr:hover {
+            background-color: #fffef0;
+            cursor: pointer;
+        }
+
+        .inquiry-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-new {
+            background-color: #FFEB3B;
+            color: #1a1a1a;
+        }
+
+        .status-read {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .service-type {
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* 모달 (문의 상세보기) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #FFEB3B;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #666;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .detail-item {
+            margin-bottom: 25px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 1rem;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+
+        .detail-value.message {
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 20px 0;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .nav-menu li {
+                margin-bottom: 0;
+                margin-right: 10px;
+            }
+
+            .nav-menu a {
+                white-space: nowrap;
+                padding: 10px 20px;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .inquiry-table {
+                font-size: 0.85rem;
+            }
+
+            .inquiry-table th,
+            .inquiry-table td {
+                padding: 10px 8px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 왼쪽 사이드바 -->
+        <aside class="sidebar">
+            <div class="logo-section">
+                <img src="images/cleanotalklogo.png" alt="Clean O talk 로고">
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active" data-tab="inquiry">문의 관리</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 오른쪽 메인 콘텐츠 -->
+        <main class="main-content">
+            <header class="header">
+                <h1>문의 관리</h1>
+            </header>
+            <div class="content-area">
+                <div class="inquiry-table-container">
+                    <div class="table-header">
+                        <h2>문의 목록</h2>
+                        <button class="refresh-btn" onclick="loadInquiries()">새로고침</button>
+                    </div>
+                    <div id="inquiryList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 문의 상세보기 모달 -->
+    <div class="modal" id="inquiryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>문의 상세</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="inquiryDetail"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/inquiries';
+
+        // 페이지 로드 시 문의 목록 불러오기
+        document.addEventListener('DOMContentLoaded', function() {
+            loadInquiries();
+        });
+
+        // 문의 목록 불러오기
+        async function loadInquiries() {
+            const listContainer = document.getElementById('inquiryList');
+            listContainer.innerHTML = '<div class="loading">로딩 중...</div>';
+
+            try {
+                const response = await fetch(API_BASE_URL);
+                if (!response.ok) {
+                    throw new Error('문의 목록을 불러오는데 실패했습니다.');
+                }
+                const inquiries = await response.json();
+
+                if (inquiries.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <h3>문의 내역이 없습니다</h3>
+                            <p>새로운 문의가 접수되면 여기에 표시됩니다.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let tableHTML = `
+                    <table class="inquiry-table">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>이름</th>
+                                <th>연락처</th>
+                                <th>서비스 유형</th>
+                                <th>면적</th>
+                                <th>상태</th>
+                                <th>등록일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                inquiries.forEach((inquiry, index) => {
+                    const date = new Date(inquiry.created_at);
+                    const formattedDate = date.toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    tableHTML += `
+                        <tr onclick="showInquiryDetail(${inquiry.id})">
+                            <td>${inquiries.length - index}</td>
+                            <td>${escapeHtml(inquiry.name)}</td>
+                            <td>${escapeHtml(inquiry.phone)}</td>
+                            <td><span class="service-type">${escapeHtml(inquiry.service || '-')}</span></td>
+                            <td>${escapeHtml(inquiry.area || '-')}</td>
+                            <td><span class="status-badge status-new">신규</span></td>
+                            <td>${formattedDate}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                listContainer.innerHTML = tableHTML;
+            } catch (error) {
+                console.error('Error loading inquiries:', error);
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <h3>오류가 발생했습니다</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 문의 상세보기
+        async function showInquiryDetail(id) {
+            const modal = document.getElementById('inquiryModal');
+            const detailContainer = document.getElementById('inquiryDetail');
+
+            detailContainer.innerHTML = '<div class="loading">로딩 중...</div>';
+            modal.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`);
+                if (!response.ok) {
+                    throw new Error('문의 상세 정보를 불러오는데 실패했습니다.');
+                }
+                const inquiry = await response.json();
+
+                const date = new Date(inquiry.created_at);
+                const formattedDate = date.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                detailContainer.innerHTML = `
+                    <div class="detail-item">
+                        <div class="detail-label">이름</div>
+                        <div class="detail-value">${escapeHtml(inquiry.name)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">연락처</div>
+                        <div class="detail-value">${escapeHtml(inquiry.phone)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">서비스 유형</div>
+                        <div class="detail-value">${escapeHtml(inquiry.service || '-')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">면적</div>
+                        <div class="detail-value">${escapeHtml(inquiry.area || '-')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">주소</div>
+                        <div class="detail-value">${escapeHtml(inquiry.address || '-')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">희망 일시</div>
+                        <div class="detail-value">${escapeHtml(inquiry.date || '-')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">문의 내용</div>
+                        <div class="detail-value message">${escapeHtml(inquiry.message || '-')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">등록일</div>
+                        <div class="detail-value">${formattedDate}</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading inquiry detail:', error);
+                detailContainer.innerHTML = `
+                    <div class="empty-state">
+                        <h3>오류가 발생했습니다</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            const modal = document.getElementById('inquiryModal');
+            modal.classList.remove('active');
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('inquiryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // XSS 방지
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
+

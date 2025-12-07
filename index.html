@@ -1829,7 +1829,7 @@
         // 문의 폼 제출
         const contactForm = document.getElementById('contactForm');
         if (contactForm) {
-            contactForm.addEventListener('submit', function(e) {
+            contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 // 폼 데이터 수집
@@ -1839,12 +1839,38 @@
                     data[key] = value;
                 });
 
-                // 여기서 실제로는 서버로 데이터를 전송해야 합니다
-                // 예시: alert로 표시
-                alert('문의가 접수되었습니다.\n빠른 시일 내에 연락드리겠습니다.');
-                
-                // 폼 초기화
-                this.reset();
+                // 제출 버튼 비활성화
+                const submitBtn = this.querySelector('.form-submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.textContent = '전송 중...';
+
+                try {
+                    const response = await fetch('/api/inquiries', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('문의 접수에 실패했습니다.');
+                    }
+
+                    const result = await response.json();
+                    alert('문의가 접수되었습니다.\n빠른 시일 내에 연락드리겠습니다.');
+                    
+                    // 폼 초기화
+                    this.reset();
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    alert('문의 접수 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.');
+                } finally {
+                    // 제출 버튼 활성화
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
             });
         }
 

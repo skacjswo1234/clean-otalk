@@ -1,0 +1,16 @@
+{
+  "name": "clean-otalk",
+  "version": "1.0.0",
+  "description": "Clean O talk 관리자 시스템",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 execute clean-otalk-db --file=./schema.sql",
+    "db:migrate": "wrangler d1 migrations apply clean-otalk-db"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
+
