@@ -37,11 +37,36 @@
             padding: 0 30px 30px;
             border-bottom: 2px solid rgba(255, 235, 59, 0.2);
             margin-bottom: 30px;
+            position: relative;
         }
 
         .logo-section img {
             max-width: 100%;
             height: auto;
+        }
+
+        .mobile-close-btn {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #FFEB3B;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .mobile-close-btn:hover {
+            background-color: rgba(255, 235, 59, 0.2);
+            transform: rotate(90deg);
         }
 
         .nav-menu {
@@ -445,6 +470,10 @@
                 right: 0;
             }
 
+            .mobile-close-btn {
+                display: flex !important;
+            }
+
             .main-content {
                 width: 100%;
             }
@@ -652,6 +681,7 @@
         <!-- 왼쪽 사이드바 (데스크탑) / 오른쪽 슬라이드 (모바일) -->
         <aside class="sidebar" id="sidebar">
             <div class="logo-section">
+                <button class="mobile-close-btn" onclick="closeMobileMenu()" aria-label="메뉴 닫기">×</button>
                 <img src="images/cleanotalklogo.png" alt="Clean O talk 로고">
             </div>
             <nav>
