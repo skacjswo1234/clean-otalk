@@ -1735,6 +1735,39 @@
     </footer>
 
     <script>
+        // 모달 함수들 (전역 스코프 - window 객체에 명시적으로 할당)
+        window.showSuccessModal = function() {
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.classList.add('active');
+            }
+        };
+
+        window.closeSuccessModal = function() {
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        };
+
+        window.showErrorModal = function(message) {
+            const modal = document.getElementById('errorModal');
+            const messageElement = document.getElementById('errorModalMessage');
+            if (modal) {
+                if (message && messageElement) {
+                    messageElement.innerHTML = message;
+                }
+                modal.classList.add('active');
+            }
+        };
+
+        window.closeErrorModal = function() {
+            const modal = document.getElementById('errorModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        };
+
         // DOM이 완전히 로드된 후 실행
         document.addEventListener('DOMContentLoaded', function() {
         // 모바일 화면 감지 및 비디오 소스 설정
@@ -2189,46 +2222,25 @@
             }
         })();
 
-        // 성공 모달 표시
-        function showSuccessModal() {
-            const modal = document.getElementById('successModal');
-            modal.classList.add('active');
+        // 모달 외부 클릭 시 닫기 (이벤트 리스너는 DOMContentLoaded 안에서 설정)
+        const successModal = document.getElementById('successModal');
+        const errorModal = document.getElementById('errorModal');
+        
+        if (successModal) {
+            successModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSuccessModal();
+                }
+            });
         }
 
-        // 성공 모달 닫기
-        function closeSuccessModal() {
-            const modal = document.getElementById('successModal');
-            modal.classList.remove('active');
+        if (errorModal) {
+            errorModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeErrorModal();
+                }
+            });
         }
-
-        // 오류 모달 표시
-        function showErrorModal(message) {
-            const modal = document.getElementById('errorModal');
-            const messageElement = document.getElementById('errorModalMessage');
-            if (message) {
-                messageElement.innerHTML = message;
-            }
-            modal.classList.add('active');
-        }
-
-        // 오류 모달 닫기
-        function closeErrorModal() {
-            const modal = document.getElementById('errorModal');
-            modal.classList.remove('active');
-        }
-
-        // 모달 외부 클릭 시 닫기
-        document.getElementById('successModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeSuccessModal();
-            }
-        });
-
-        document.getElementById('errorModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeErrorModal();
-            }
-        });
 
         }); // DOMContentLoaded 종료
     </script>
