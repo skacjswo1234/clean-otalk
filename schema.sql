@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS inquiries (
     address TEXT,
     date TEXT,
     message TEXT NOT NULL,
+    status TEXT DEFAULT 'new',
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
 );

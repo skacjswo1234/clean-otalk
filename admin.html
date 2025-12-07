@@ -191,8 +191,62 @@
         }
 
         .status-read {
-            background-color: #e0e0e0;
-            color: #666;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status-processing {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .status-completed {
+            background-color: #9E9E9E;
+            color: white;
+        }
+
+        .status-select {
+            padding: 5px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: #FFC107;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .delete-btn {
+            padding: 6px 12px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: #d32f2f;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .service-type {
@@ -373,6 +427,7 @@
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#" class="active" data-tab="inquiry">문의 관리</a></li>
+                    <li><a href="/change-password.html" data-tab="password">비밀번호 변경</a></li>
                 </ul>
             </nav>
         </aside>
@@ -380,7 +435,10 @@
         <!-- 오른쪽 메인 콘텐츠 -->
         <main class="main-content">
             <header class="header">
-                <h1>문의 관리</h1>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h1>문의 관리</h1>
+                    <a href="#" onclick="logout(); return false;" style="color: #666; text-decoration: none; font-size: 0.9rem;">로그아웃</a>
+                </div>
             </header>
             <div class="content-area">
                 <div class="inquiry-table-container">
@@ -409,6 +467,26 @@
 
     <script>
         const API_BASE_URL = '/api/inquiries';
+
+        // 로그인 확인
+        if (!sessionStorage.getItem('adminLoggedIn')) {
+            window.location.href = '/login.html';
+        }
+
+        // 상태 색상 함수
+        function getStatusColor(status) {
+            const colors = {
+                'new': '#FFEB3B',
+                'read': '#4CAF50',
+                'processing': '#2196F3',
+                'completed': '#9E9E9E'
+            };
+            return colors[status] || colors['new'];
+        }
+
+        function getStatusTextColor(status) {
+            return status === 'new' ? '#1a1a1a' : 'white';
+        }
 
         // 페이지 로드 시 문의 목록 불러오기
         document.addEventListener('DOMContentLoaded', function() {
@@ -451,6 +529,7 @@
                                 <th>면적</th>
                                 <th>상태</th>
                                 <th>등록일</th>
+                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -466,15 +545,33 @@
                         minute: '2-digit'
                     });
 
+                    const status = inquiry.status || 'new';
+                    const statusText = {
+                        'new': '신규',
+                        'read': '확인',
+                        'processing': '처리중',
+                        'completed': '완료'
+                    };
+
                     tableHTML += `
-                        <tr onclick="showInquiryDetail(${inquiry.id})">
-                            <td>${inquiries.length - index}</td>
-                            <td>${escapeHtml(inquiry.name)}</td>
-                            <td>${escapeHtml(inquiry.phone)}</td>
-                            <td><span class="service-type">${escapeHtml(inquiry.service || '-')}</span></td>
-                            <td>${escapeHtml(inquiry.area || '-')}</td>
-                            <td><span class="status-badge status-new">신규</span></td>
-                            <td>${formattedDate}</td>
+                        <tr>
+                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${inquiries.length - index}</td>
+                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.name)}</td>
+                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.phone)}</td>
+                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;"><span class="service-type">${escapeHtml(inquiry.service || '-')}</span></td>
+                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.area || '-')}</td>
+                            <td onclick="event.stopPropagation();">
+                                <select class="status-select" onchange="updateStatus(${inquiry.id}, this.value)" style="background-color: ${getStatusColor(status)}; color: ${getStatusTextColor(status)};">
+                                    <option value="new" ${status === 'new' ? 'selected' : ''}>신규</option>
+                                    <option value="read" ${status === 'read' ? 'selected' : ''}>확인</option>
+                                    <option value="processing" ${status === 'processing' ? 'selected' : ''}>처리중</option>
+                                    <option value="completed" ${status === 'completed' ? 'selected' : ''}>완료</option>
+                                </select>
+                            </td>
+                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${formattedDate}</td>
+                            <td onclick="event.stopPropagation();">
+                                <button class="delete-btn" onclick="deleteInquiry(${inquiry.id})">삭제</button>
+                            </td>
                         </tr>
                     `;
                 });
@@ -577,6 +674,59 @@
                 closeModal();
             }
         });
+
+        // 상태 업데이트
+        async function updateStatus(id, status) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (!response.ok) {
+                    throw new Error('상태 업데이트에 실패했습니다.');
+                }
+
+                // 목록 새로고침
+                loadInquiries();
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('상태 업데이트 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 문의 삭제
+        async function deleteInquiry(id) {
+            if (!confirm('정말 이 문의를 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('문의 삭제에 실패했습니다.');
+                }
+
+                // 목록 새로고침
+                loadInquiries();
+                alert('문의가 삭제되었습니다.');
+            } catch (error) {
+                console.error('Error deleting inquiry:', error);
+                alert('문의 삭제 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 로그아웃
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            window.location.href = '/login.html';
+        }
 
         // XSS 방지
         function escapeHtml(text) {
