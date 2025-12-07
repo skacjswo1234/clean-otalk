@@ -147,6 +147,10 @@
             border-collapse: collapse;
         }
 
+        .inquiry-card-list {
+            display: none;
+        }
+
         .inquiry-table thead {
             background-color: #f8f9fa;
         }
@@ -371,73 +375,308 @@
             color: #666;
         }
 
+        /* 모바일 메뉴 버튼 */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 1.5rem;
+            color: #333;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .mobile-menu-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-menu-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* 모바일 반응형 */
         @media (max-width: 768px) {
             .admin-container {
                 flex-direction: column;
             }
 
+            .header {
+                padding: 15px 20px;
+                position: relative;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
             .sidebar {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                z-index: 999;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+                overflow-y: auto;
+            }
+
+            .sidebar.active {
+                right: 0;
+            }
+
+            .main-content {
                 width: 100%;
-                height: auto;
-                padding: 20px 0;
-            }
-
-            .nav-menu {
-                display: flex;
-                overflow-x: auto;
-            }
-
-            .nav-menu li {
-                margin-bottom: 0;
-                margin-right: 10px;
-            }
-
-            .nav-menu a {
-                white-space: nowrap;
-                padding: 10px 20px;
             }
 
             .content-area {
-                padding: 20px;
+                padding: 15px;
+            }
+
+            .table-header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .table-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .inquiry-table-container {
+                overflow-x: visible;
             }
 
             .inquiry-table {
-                font-size: 0.85rem;
+                display: none !important;
             }
 
-            .inquiry-table th,
-            .inquiry-table td {
-                padding: 10px 8px;
+            .inquiry-card-list {
+                display: block !important;
+            }
+
+            .inquiry-card {
+                background-color: white;
+                border-radius: 12px;
+                padding: 15px;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                border-left: 4px solid #FFEB3B;
+            }
+
+            .inquiry-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .inquiry-card-number {
+                font-weight: 700;
+                color: #333;
+                font-size: 1.1rem;
+            }
+
+            .inquiry-card-status {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .inquiry-card-body {
+                display: grid;
+                gap: 10px;
+            }
+
+            .inquiry-card-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+            }
+
+            .inquiry-card-label {
+                font-weight: 600;
+                color: #666;
+                font-size: 0.9rem;
+            }
+
+            .inquiry-card-value {
+                color: #333;
+                font-size: 0.95rem;
+                text-align: right;
+                flex: 1;
+                margin-left: 15px;
+            }
+
+            .inquiry-card-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid #e0e0e0;
+            }
+
+            .inquiry-card-actions .status-select {
+                flex: 1;
+            }
+
+            .inquiry-card-actions .delete-btn {
+                flex-shrink: 0;
+            }
+
+            .status-select {
+                font-size: 0.8rem;
+                padding: 4px 8px;
+            }
+
+            .delete-btn {
+                padding: 5px 10px;
+                font-size: 0.8rem;
             }
 
             .modal-content {
                 padding: 20px;
+                max-width: 95%;
+            }
+
+            .modal-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .detail-item {
+                margin-bottom: 20px;
+            }
+
+            .detail-label {
+                font-size: 0.85rem;
+            }
+
+            .detail-value {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.1rem;
+            }
+
+            .content-area {
+                padding: 10px;
+            }
+
+            .table-header {
+                padding: 12px 15px;
+            }
+
+            .table-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .inquiry-card {
+                padding: 12px;
+            }
+
+            .inquiry-card-header {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+            }
+
+            .inquiry-card-body {
+                gap: 8px;
+            }
+
+            .inquiry-card-row {
+                padding: 6px 0;
+            }
+
+            .inquiry-card-label {
+                font-size: 0.85rem;
+            }
+
+            .inquiry-card-value {
+                font-size: 0.9rem;
+            }
+
+            .inquiry-card-actions {
+                margin-top: 12px;
+                padding-top: 12px;
+                flex-direction: column;
+            }
+
+            .inquiry-card-actions .status-select {
+                width: 100%;
+            }
+
+            .inquiry-card-actions .delete-btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- 왼쪽 사이드바 -->
-        <aside class="sidebar">
+        <!-- 왼쪽 사이드바 (데스크탑) / 오른쪽 슬라이드 (모바일) -->
+        <aside class="sidebar" id="sidebar">
             <div class="logo-section">
                 <img src="images/cleanotalklogo.png" alt="Clean O talk 로고">
             </div>
             <nav>
                 <ul class="nav-menu">
-                    <li><a href="#" class="active" data-tab="inquiry">문의 관리</a></li>
-                    <li><a href="/change-password.html" data-tab="password">비밀번호 변경</a></li>
+                    <li><a href="#" class="active" data-tab="inquiry" onclick="closeMobileMenu(); return false;">문의 관리</a></li>
+                    <li><a href="/change-password.html" data-tab="password" onclick="closeMobileMenu(); return false;">비밀번호 변경</a></li>
+                    <li><a href="#" onclick="logout(); return false;" style="display: none;" id="mobileLogoutLink">로그아웃</a></li>
                 </ul>
             </nav>
         </aside>
 
+        <!-- 모바일 메뉴 백드롭 -->
+        <div class="mobile-menu-backdrop" id="mobileMenuBackdrop" onclick="closeMobileMenu()"></div>
+
         <!-- 오른쪽 메인 콘텐츠 -->
         <main class="main-content">
             <header class="header">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
                     <h1>문의 관리</h1>
-                    <a href="#" onclick="logout(); return false;" style="color: #666; text-decoration: none; font-size: 0.9rem;">로그아웃</a>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <a href="#" onclick="logout(); return false;" style="color: #666; text-decoration: none; font-size: 0.9rem; display: none;" id="logoutLink">로그아웃</a>
+                        <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="메뉴">
+                            ☰
+                        </button>
+                    </div>
                 </div>
             </header>
             <div class="content-area">
@@ -472,6 +711,45 @@
         if (!sessionStorage.getItem('adminLoggedIn')) {
             window.location.href = '/login.html';
         }
+
+        // 모바일 메뉴 토글
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('mobileMenuBackdrop');
+            sidebar.classList.toggle('active');
+            backdrop.classList.toggle('active');
+        }
+
+        // 모바일 메뉴 닫기
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('mobileMenuBackdrop');
+            sidebar.classList.remove('active');
+            backdrop.classList.remove('active');
+        }
+
+        // 모바일/데스크탑 로그아웃 링크 표시
+        function updateLogoutLinks() {
+            const isMobile = window.innerWidth <= 768;
+            const desktopLogout = document.getElementById('logoutLink');
+            const mobileLogout = document.getElementById('mobileLogoutLink');
+            
+            if (isMobile) {
+                if (desktopLogout) desktopLogout.style.display = 'none';
+                if (mobileLogout) mobileLogout.style.display = 'block';
+            } else {
+                if (desktopLogout) desktopLogout.style.display = 'block';
+                if (mobileLogout) mobileLogout.style.display = 'none';
+            }
+        }
+
+        // 초기 로그아웃 링크 설정
+        updateLogoutLinks();
+        window.addEventListener('resize', function() {
+            updateLogoutLinks();
+            // 화면 크기 변경 시 목록 다시 로드 (모바일/데스크탑 전환)
+            loadInquiries();
+        });
 
         // 상태 색상 함수
         function getStatusColor(status) {
@@ -518,70 +796,123 @@
                     return;
                 }
 
-                let tableHTML = `
-                    <table class="inquiry-table">
-                        <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>이름</th>
-                                <th>연락처</th>
-                                <th>서비스 유형</th>
-                                <th>면적</th>
-                                <th>상태</th>
-                                <th>등록일</th>
-                                <th>관리</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
+                const isMobile = window.innerWidth <= 768;
+                let html = '';
 
-                inquiries.forEach((inquiry, index) => {
-                    const date = new Date(inquiry.created_at);
-                    const formattedDate = date.toLocaleDateString('ko-KR', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
+                if (isMobile) {
+                    // 모바일: 카드 형태
+                    html = '<div class="inquiry-card-list">';
+                    inquiries.forEach((inquiry, index) => {
+                        const date = new Date(inquiry.created_at);
+                        const formattedDate = date.toLocaleDateString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        const status = inquiry.status || 'new';
+                        html += `
+                            <div class="inquiry-card" onclick="showInquiryDetail(${inquiry.id})">
+                                <div class="inquiry-card-header">
+                                    <span class="inquiry-card-number">#${inquiries.length - index}</span>
+                                </div>
+                                <div class="inquiry-card-body">
+                                    <div class="inquiry-card-row">
+                                        <span class="inquiry-card-label">이름</span>
+                                        <span class="inquiry-card-value">${escapeHtml(inquiry.name)}</span>
+                                    </div>
+                                    <div class="inquiry-card-row">
+                                        <span class="inquiry-card-label">연락처</span>
+                                        <span class="inquiry-card-value">${escapeHtml(inquiry.phone)}</span>
+                                    </div>
+                                    <div class="inquiry-card-row">
+                                        <span class="inquiry-card-label">서비스</span>
+                                        <span class="inquiry-card-value"><span class="service-type">${escapeHtml(inquiry.service || '-')}</span></span>
+                                    </div>
+                                    <div class="inquiry-card-row">
+                                        <span class="inquiry-card-label">면적</span>
+                                        <span class="inquiry-card-value">${escapeHtml(inquiry.area || '-')}</span>
+                                    </div>
+                                    <div class="inquiry-card-row">
+                                        <span class="inquiry-card-label">등록일</span>
+                                        <span class="inquiry-card-value">${formattedDate}</span>
+                                    </div>
+                                </div>
+                                <div class="inquiry-card-actions" onclick="event.stopPropagation();">
+                                    <select class="status-select" onchange="updateStatus(${inquiry.id}, this.value)" style="background-color: ${getStatusColor(status)}; color: ${getStatusTextColor(status)};">
+                                        <option value="new" ${status === 'new' ? 'selected' : ''}>신규</option>
+                                        <option value="read" ${status === 'read' ? 'selected' : ''}>확인</option>
+                                        <option value="processing" ${status === 'processing' ? 'selected' : ''}>처리중</option>
+                                        <option value="completed" ${status === 'completed' ? 'selected' : ''}>완료</option>
+                                    </select>
+                                    <button class="delete-btn" onclick="deleteInquiry(${inquiry.id})">삭제</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                } else {
+                    // 데스크탑: 테이블 형태
+                    html = `
+                        <table class="inquiry-table">
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>이름</th>
+                                    <th>연락처</th>
+                                    <th>서비스 유형</th>
+                                    <th>면적</th>
+                                    <th>상태</th>
+                                    <th>등록일</th>
+                                    <th>관리</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    inquiries.forEach((inquiry, index) => {
+                        const date = new Date(inquiry.created_at);
+                        const formattedDate = date.toLocaleDateString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        const status = inquiry.status || 'new';
+                        html += `
+                            <tr>
+                                <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${inquiries.length - index}</td>
+                                <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.name)}</td>
+                                <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.phone)}</td>
+                                <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;"><span class="service-type">${escapeHtml(inquiry.service || '-')}</span></td>
+                                <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.area || '-')}</td>
+                                <td onclick="event.stopPropagation();">
+                                    <select class="status-select" onchange="updateStatus(${inquiry.id}, this.value)" style="background-color: ${getStatusColor(status)}; color: ${getStatusTextColor(status)};">
+                                        <option value="new" ${status === 'new' ? 'selected' : ''}>신규</option>
+                                        <option value="read" ${status === 'read' ? 'selected' : ''}>확인</option>
+                                        <option value="processing" ${status === 'processing' ? 'selected' : ''}>처리중</option>
+                                        <option value="completed" ${status === 'completed' ? 'selected' : ''}>완료</option>
+                                    </select>
+                                </td>
+                                <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${formattedDate}</td>
+                                <td onclick="event.stopPropagation();">
+                                    <button class="delete-btn" onclick="deleteInquiry(${inquiry.id})">삭제</button>
+                                </td>
+                            </tr>
+                        `;
                     });
 
-                    const status = inquiry.status || 'new';
-                    const statusText = {
-                        'new': '신규',
-                        'read': '확인',
-                        'processing': '처리중',
-                        'completed': '완료'
-                    };
-
-                    tableHTML += `
-                        <tr>
-                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${inquiries.length - index}</td>
-                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.name)}</td>
-                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.phone)}</td>
-                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;"><span class="service-type">${escapeHtml(inquiry.service || '-')}</span></td>
-                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${escapeHtml(inquiry.area || '-')}</td>
-                            <td onclick="event.stopPropagation();">
-                                <select class="status-select" onchange="updateStatus(${inquiry.id}, this.value)" style="background-color: ${getStatusColor(status)}; color: ${getStatusTextColor(status)};">
-                                    <option value="new" ${status === 'new' ? 'selected' : ''}>신규</option>
-                                    <option value="read" ${status === 'read' ? 'selected' : ''}>확인</option>
-                                    <option value="processing" ${status === 'processing' ? 'selected' : ''}>처리중</option>
-                                    <option value="completed" ${status === 'completed' ? 'selected' : ''}>완료</option>
-                                </select>
-                            </td>
-                            <td onclick="showInquiryDetail(${inquiry.id})" style="cursor: pointer;">${formattedDate}</td>
-                            <td onclick="event.stopPropagation();">
-                                <button class="delete-btn" onclick="deleteInquiry(${inquiry.id})">삭제</button>
-                            </td>
-                        </tr>
+                    html += `
+                            </tbody>
+                        </table>
                     `;
-                });
+                }
 
-                tableHTML += `
-                        </tbody>
-                    </table>
-                `;
-
-                listContainer.innerHTML = tableHTML;
+                listContainer.innerHTML = html;
             } catch (error) {
                 console.error('Error loading inquiries:', error);
                 listContainer.innerHTML = `

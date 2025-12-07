@@ -788,6 +788,177 @@
             box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
         }
 
+        /* 문의 완료 모달 */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .success-modal-content {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFEB3B 100%);
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        .success-modal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background-color: rgba(26, 26, 26, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .success-modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .success-modal-message {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .success-modal-btn {
+            padding: 15px 40px;
+            background-color: #1a1a1a;
+            color: #FFEB3B;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-modal-btn:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-modal.active {
+            display: flex;
+        }
+
+        .error-modal-content {
+            background-color: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            position: relative;
+            border: 3px solid #f44336;
+        }
+
+        .error-modal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background-color: #ffebee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #f44336;
+        }
+
+        .error-modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .error-modal-message {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .error-modal-btn {
+            padding: 15px 40px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .error-modal-btn:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.3);
+        }
+
         /* 작업현장 슬라이더 섹션 - 새로 작성 */
         .job-slider-section {
             background-color: #f8f9fa;
@@ -1504,6 +1675,32 @@
         </div>
     </section>
 
+    <!-- 문의 완료 모달 -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-modal-icon">✓</div>
+            <h2 class="success-modal-title">문의가 접수되었습니다!</h2>
+            <p class="success-modal-message">
+                빠른 시일 내에 연락드리겠습니다.<br>
+                감사합니다.
+            </p>
+            <button class="success-modal-btn" onclick="closeSuccessModal()">확인</button>
+        </div>
+    </div>
+
+    <!-- 오류 모달 -->
+    <div class="error-modal" id="errorModal">
+        <div class="error-modal-content">
+            <div class="error-modal-icon">✕</div>
+            <h2 class="error-modal-title">오류가 발생했습니다</h2>
+            <p class="error-modal-message" id="errorModalMessage">
+                문의 접수 중 오류가 발생했습니다.<br>
+                잠시 후 다시 시도해주세요.
+            </p>
+            <button class="error-modal-btn" onclick="closeErrorModal()">확인</button>
+        </div>
+    </div>
+
     <!-- 푸터 -->
     <footer>
         <div class="footer-content">
@@ -1859,13 +2056,16 @@
                     }
 
                     const result = await response.json();
-                    alert('문의가 접수되었습니다.\n빠른 시일 내에 연락드리겠습니다.');
+                    
+                    // 성공 모달 표시
+                    showSuccessModal();
                     
                     // 폼 초기화
                     this.reset();
                 } catch (error) {
                     console.error('Error submitting form:', error);
-                    alert('문의 접수 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.');
+                    // 오류 모달 표시
+                    showErrorModal('문의 접수 중 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.');
                 } finally {
                     // 제출 버튼 활성화
                     submitBtn.disabled = false;
@@ -1988,6 +2188,48 @@
                 setTimeout(init, 500);
             }
         })();
+
+        // 성공 모달 표시
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.add('active');
+        }
+
+        // 성공 모달 닫기
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.remove('active');
+        }
+
+        // 오류 모달 표시
+        function showErrorModal(message) {
+            const modal = document.getElementById('errorModal');
+            const messageElement = document.getElementById('errorModalMessage');
+            if (message) {
+                messageElement.innerHTML = message;
+            }
+            modal.classList.add('active');
+        }
+
+        // 오류 모달 닫기
+        function closeErrorModal() {
+            const modal = document.getElementById('errorModal');
+            modal.classList.remove('active');
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccessModal();
+            }
+        });
+
+        document.getElementById('errorModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeErrorModal();
+            }
+        });
+
         }); // DOMContentLoaded 종료
     </script>
 
