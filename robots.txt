@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /change-password.html
+Disallow: /functions/
+Disallow: /admin_schema.sql
+Disallow: /schema.sql
+
+Sitemap: https://cleanotalk.com/sitemap.xml
+
